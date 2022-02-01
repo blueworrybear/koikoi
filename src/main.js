@@ -16,22 +16,20 @@ const app = createApp(App)
   .use(store)
   .use(vuetify)
 
+store.commit('setEmitter', emitter)
+
 app.config.globalProperties.$conn = undefined;
+app.config.globalProperties.$emitter = emitter;
 app.config.globalProperties.$connectServer = (peerID) => {
     const conn = peer.connect(peerID)
     app.config.globalProperties.$conn = conn
     conn.on('open', () => {
-        conn.send('hi!');
         router.push("/room")
     })
-    conn.on('data', data => {
-        console.log(data)
-        emitter.emit('receive', data)
-    })
-    conn.on('close', () => {
-        app.config.globalProperties.$conn = undefined
-        router.push("/")
-    })
+
+    conn.on('data', handlePeerOnData)
+
+    conn.on('close', handlePeerOnClose)
 }
 
 peer.on('open', id => {
@@ -41,15 +39,19 @@ peer.on('open', id => {
 peer.on('connection', conn => {
     app.config.globalProperties.$conn = conn
     router.push("/room")
-    conn.on('data', data => {
-        console.log(data);
-        emitter.emit('receive', data)
-    });
 
-    conn.on('close', () => {
-        app.config.globalProperties.$conn = undefined
-        router.push("/")
-    })
+    conn.on('data', handlePeerOnData)
+
+    conn.on('close', handlePeerOnClose)
 })
 
 app.mount('#app')
+
+function handlePeerOnData(data) {
+    emitter.emit('peerData', JSON.parse(data))
+}
+
+function handlePeerOnClose() {
+    app.config.globalProperties.$conn = undefined
+    router.push("/")
+}

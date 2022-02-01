@@ -5,7 +5,8 @@ import {Playmat} from './playmat'
 export default createStore({
   state: {
     peerID: "",
-    role: "host"
+    role: "host",
+    emitter: undefined
   },
   mutations: {
     setPeerID(state, id){
@@ -13,6 +14,9 @@ export default createStore({
     },
     setRole(state, role) {
       state.role = role
+    },
+    setEmitter(state, emitter) {
+      state.emitter = emitter
     }
   },
   actions: {
