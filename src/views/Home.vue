@@ -26,7 +26,6 @@ export default {
   },
   methods: {
     conn() {
-      console.log(this.$bear);
       this.$connectServer(this.peer)
     },
     send() {

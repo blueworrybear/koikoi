@@ -1,9 +1,11 @@
 import { createStore } from 'vuex'
 import {Player} from './player'
+import {Playmat} from './playmat'
 
 export default createStore({
   state: {
-    peerID: ""
+    peerID: "",
+    role: "host"
   },
   mutations: {
     setPeerID(state, id){
@@ -14,6 +16,7 @@ export default createStore({
   },
   modules: {
     client: Player,
-    host: Player
+    host: Player,
+    playmat: Playmat,
   }
 })
