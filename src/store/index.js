@@ -10,6 +10,9 @@ export default createStore({
   mutations: {
     setPeerID(state, id){
       state.peerID = id
+    },
+    setRole(state, role) {
+      state.role = role
     }
   },
   actions: {

@@ -22,10 +22,15 @@ app.config.globalProperties.$connectServer = (peerID) => {
     app.config.globalProperties.$conn = conn
     conn.on('open', () => {
         conn.send('hi!');
-    });
+        router.push("/room")
+    })
     conn.on('data', data => {
         console.log(data)
         emitter.emit('receive', data)
+    })
+    conn.on('close', () => {
+        app.config.globalProperties.$conn = undefined
+        router.push("/")
     })
 }
 
@@ -35,9 +40,16 @@ peer.on('open', id => {
 
 peer.on('connection', conn => {
     app.config.globalProperties.$conn = conn
+    router.push("/room")
     conn.on('data', data => {
         console.log(data);
+        emitter.emit('receive', data)
     });
+
+    conn.on('close', () => {
+        app.config.globalProperties.$conn = undefined
+        router.push("/")
+    })
 })
 
 app.mount('#app')
