@@ -1,25 +1,37 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    bear
-    <div>{{peerID}}</div>
-    <HelloWorld msg="Welcome to Your Vue.js App!"/>
+  <div>
+    <HelloWorld/>
+    {{peerID}}
+    <v-text-field v-model="peer"></v-text-field>
+    <v-btn @click="conn"></v-btn>
+    <v-btn @click="send">send</v-btn>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import HelloWorld from '../components/HelloWorld.vue';
 
 export default {
   name: 'Home',
   components: {
-    HelloWorld
+    HelloWorld,
   },
+  data: () => ({
+    peer: ""
+  }),
   computed: {
     peerID() {
-      return this.$store.state.peerID;
+      return this.$store.state.peerID
+    }
+  },
+  methods: {
+    conn() {
+      console.log(this.$bear);
+      this.$connectServer(this.peer)
+    },
+    send() {
+      this.$conn.send('send')
     }
   }
-}
+};
 </script>
